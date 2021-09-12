@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- CSS only -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+
+	<title></title>
+</head>
+<body>
+
+
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<p id="temp">no info</p>
+<p id="humid">no info</p>
+<p id="noemer">no info</p>
+<button type="button" class="btn btn-danger" id="s0">s0</button>
+<button type="button" class="btn btn-danger" id="s1">s1</button>
+<button type="button" class="btn btn-danger" id="s2">s2</button>
+<button type="button" class="btn btn-danger" id="s3">s3</button>
+
+
+
+
+
+<!-- JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript">
+	var s0=document.getElementById('s0')
+	var s1=document.getElementById('s1')
+	var s2=document.getElementById('s2')
+	var s3=document.getElementById('s3')
+	s0.value=false
+	s1.value=false
+	s2.value=false
+	s3.value=false
+	var temp=document.getElementById('temp')
+	var humid=document.getElementById('humid')
+	var noemer=document.getElementById('noemer')
+	var input={temp:99,humid:99}
+	s0.addEventListener('click',function(){
+		this.value=!eval(this.value);
+		if(eval(this.value)==true){
+			this.classList.remove('btn-danger')
+			this.classList.add("btn-success");
+		}
+		else{
+			this.classList.remove('btn-success')
+			this.classList.add("btn-danger");
+		}
+		post()
+	});
+	s1.addEventListener('click',function(){
+		this.value=!eval(this.value);
+		if(eval(this.value)==true){
+			this.classList.remove('btn-danger')
+			this.classList.add("btn-success");
+		}
+		else{
+			this.classList.remove('btn-success')
+			this.classList.add("btn-danger");
+		}
+		post()
+	});
+	s2.addEventListener('click',function(){
+		this.value=!eval(this.value);
+		if(eval(this.value)==true){
+			this.classList.remove('btn-danger')
+			this.classList.add("btn-success");
+		}
+		else{
+			this.classList.remove('btn-success')
+			this.classList.add("btn-danger");
+		}
+		post()
+	});
+	s3.addEventListener('click',function(){
+		this.value=!eval(this.value);
+		if(eval(this.value)==true){
+			this.classList.remove('btn-danger')
+			this.classList.add("btn-success");
+		}
+		else{
+			this.classList.remove('btn-success')
+			this.classList.add("btn-danger");
+		}
+		post()
+	});
+function post() {
+	var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+var theUrl = "http://litfur.herokuapp.com/clientpost";
+xmlhttp.open("POST", theUrl);
+xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+xmlhttp.send(JSON.stringify({ "s0": eval(s0.value), "s1":eval(s1.value), "s2":eval(s2.value), "s3":eval(s3.value) }));
+}
+
+
+setInterval(function(){
+
+var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      input=JSON.parse(this.responseText);
+    }
+  };
+  xhttp.open("GET", "http://litfur.herokuapp.com/client", true);
+  xhttp.send();
+
+
+temp.innerText=input.temp;
+humid.innerText=input.humid;
+
+ }, 3000);
+</script>>
+
+
+</body>
+</html>

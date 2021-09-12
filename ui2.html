@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- Compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+
+	<title>Smart HomeSystem</title>
+
+	<style type="text/css">
+		*{
+			text-align: center;
+		}
+		.midmarg{
+			margin-top: 25%;
+		}
+		.hidden{
+			display: none;
+		}
+		.row2{
+			margin-top: 0;
+			margin-bottom: 0;
+		}
+		.mybtn{
+			height: 12vh;
+			padding-top: 5px;
+		}
+		.row .col{
+			display: flex;
+  			justify-content: center;
+  			align-items: center;
+		}
+
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h2>Smart HomeSystem</h2>
+		<div class="divider"></div>
+		<br>
+		<div class="progress midmarg">
+			<div class="indeterminate"></div>
+		</div>
+		<div class="row hidden">
+			<div class="col s6">
+			<div class="section">
+				<h5>Temprature</h5>
+				<p><span id="temp">25</span>C</p>
+			</div>
+		</div>
+		<div class="col s6">
+			<div class="section">
+				<h5>Humidity</h5>
+				<p><span id="humid">35</span>%</p>
+			</div>
+		</div>
+	</div>
+	<div class="row row2 hidden">
+		<div class="col s6 card-panel red lighten-2 row2 mybtn" id="s0">Switch 1</div>
+		<div class="col s6 card-panel red lighten-2 row2 mybtn" id="s1">Switch 2</div>
+	</div>
+	<div class="row row2 hidden">
+		<div class="col s6 card-panel red lighten-2 row2 mybtn" id="s2">Switch 3</div>
+		<div class="col s6 card-panel red lighten-2 row2 mybtn" id="s3">Switch 4</div>
+	</div>
+	<div class="row row2 hidden">
+		<div class="col s6 card-panel red lighten-2 row2 mybtn" id="l">Lock</div>
+		<div class="col s6 card-panel red lighten-2 row2 mybtn" id="r">Reset</div>
+	</div>
+
+
+
+
+
+
+
+<div class="card red darken-1">
+        <div class="card-content white-text hidden" id="info">
+          System is Up
+        </div>
+       
+      </div>
+
+
+</div>
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+<script type="text/javascript">
+	//basic functions
+	function togglebtn(ele){
+		if(ele.id=='l' || ele.id=='r'){
+			if(ele.value==true){
+			ele.classList.remove('green')
+			ele.classList.remove('lighten-3')
+			ele.classList.add('red')
+			ele.classList.add('lighten-2')
+			ele.value=false
+			output[ele.id]=ele.value
+		}
+		else{
+			ele.classList.remove('red')
+			ele.classList.remove('lighten-2')
+			ele.classList.add('green')
+			ele.classList.add('lighten-3')
+			ele.value=true
+			output[ele.id]=ele.value
+		}
+	}
+	else{
+			if(ele.value==false){
+			ele.classList.remove('green')
+			ele.classList.remove('lighten-3')
+			ele.classList.add('red')
+			ele.classList.add('lighten-2')
+			ele.value=true
+			output[ele.id]=ele.value
+		}
+		else{
+			ele.classList.remove('red')
+			ele.classList.remove('lighten-2')
+			ele.classList.add('green')
+			ele.classList.add('lighten-3')
+			ele.value=false
+			output[ele.id]=ele.value
+		}
+
+		}
+		}
+	
+	function togglehide(ele){
+		ele.classList.toggle("hidden");
+
+	}
+	function changtext(ele,txt){
+		ele.innerText= txt
+	}
+	function start(){
+	togglehide(prog)
+	for(var i=0;i<row.length;i++){togglehide(row[i])}
+}
+function get(){
+	let iput=undefined
+	
+	var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      input=JSON.parse(this.responseText);
+
+      update()
+
+    }
+  };
+  xhttp.open("GET", "http://litfur.herokuapp.com/client", true);
+  xhttp.send();
+
+}
+function get1(){
+	let iput=undefined
+	
+	var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      output=JSON.parse(this.responseText);
+
+      update1()
+
+    }
+  };
+  xhttp.open("GET", "http://litfur.herokuapp.com/", true);
+  xhttp.send();
+
+}
+function update(){
+	if(input.f){
+		changtext(info,"Your house is on fire!")
+		togglehide(info)
+	}
+	if(input.t){
+		changtext(info,"Unsuspicious activity detected!")
+		togglehide(info)
+	}
+	changtext(th[0],input.temp)
+	changtext(th[1],input.humid)
+
+}
+function update1(){
+	if(output.l){togglebtn(btn[0])}
+	if(!output.s0){togglebtn(btn[1])}
+	if(!output.s1){togglebtn(btn[2])}
+	if(!output.s2){togglebtn(btn[3])}
+	if(!output.s3){togglebtn(btn[4])}
+	if(output.r){togglebtn(btn[5])}
+}
+function sleep() {
+  return new Promise(input => get());
+}
+function sleep1() {
+  return new Promise(output => get1());
+}
+function post() {
+  var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+var theUrl = "http://litfur.herokuapp.com/clientpost";
+xmlhttp.open("POST", theUrl);
+xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+xmlhttp.send(JSON.stringify(output));
+}
+
+//variables and datatypes
+let btn=[document.getElementById('l'),document.getElementById('s0'),document.getElementById('s1'),document.getElementById('s2'),document.getElementById('s3'),document.getElementById('r')]
+let th=[document.getElementById('temp'),document.getElementById('humid')]
+row=document.getElementsByClassName('row')
+prog=document.getElementsByClassName('progress')[0]
+let info=document.getElementById('info')
+let input=undefined
+let output=undefined
+
+//events
+btn.forEach(ele=>ele.value=true)
+btn[0].value=false
+btn[5].value=false
+btn.forEach((ele)=>{
+	ele.addEventListener('click',function(){
+		togglebtn(this)
+		post()
+	})
+} )
+
+
+
+//sequence start here
+sleep()
+sleep1()
+start()
+setInterval(get(), 3000);
+
+</script>
+
+</body>
+</html>
